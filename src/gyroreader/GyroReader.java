@@ -59,6 +59,10 @@ public class GyroReader implements SerialPortEventListener
      * Default bits per second for COM port.
      */
     private static final int DATA_RATE = 57600;
+    
+    private double maxX = 0;
+    private double maxY = 0;
+    private double maxZ = 0;
 
     public void initialize()
     {
@@ -140,6 +144,25 @@ public class GyroReader implements SerialPortEventListener
                 double doubY= (double)decimalY/257;
                 double doubZ= (double)decimalZ/234;
                 System.out.println("X is: " + doubX + "\nY is: " + doubY + "\nZ is: " + doubZ);
+                
+                if(maxX < doubX)
+                    maxX = doubX;
+                else if(doubX < 0 && maxX < (doubX * -1))
+                    maxX = (doubX * -1);
+                
+                if(maxY < doubY)
+                    maxY = doubY;
+                else if(doubY < 0 && maxY < (doubX * -1))
+                    maxY = (doubY * -1);
+                
+                if(maxZ < doubZ)
+                    maxZ = doubZ;
+                else if(doubZ < 0 && maxZ < (doubZ * -1))
+                    maxZ = (doubZ * -1);
+                
+                System.out.println("Max X is: " + maxX);
+                System.out.println("Max Y is: " + maxY);
+                System.out.println("Max Z is: " + maxZ);
             }
             catch (Exception e) {
                 System.err.println(e.toString());
