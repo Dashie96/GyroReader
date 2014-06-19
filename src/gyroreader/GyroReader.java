@@ -15,6 +15,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.Enumeration;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -115,7 +117,30 @@ public class GyroReader implements SerialPortEventListener
         if (oEvent.getEventType() == SerialPortEvent.DATA_AVAILABLE) {
             try {
                 String inputLine = input.readLine();
-                System.out.println("Input bytes: " + inputLine);
+                
+                String wordOne = inputLine.charAt(2) + "" + 
+                        inputLine.charAt(3) + "" + inputLine.charAt(4) + "" + 
+                        inputLine.charAt(5);
+                int decimalX = Integer.parseInt(wordOne, 16);
+                if(decimalX > 32767)
+                    decimalX -= 65536;
+                
+                String wordTwo = inputLine.charAt(9) +""+ inputLine.charAt(10)
+                        +""+ inputLine.charAt(11) +""+ inputLine.charAt(12);
+                int decimalY = Integer.parseInt(wordTwo, 16);
+                if(decimalY > 32767)
+                    decimalY -= 65536;
+                
+                String wordThree = inputLine.charAt(16) +""+ inputLine.charAt(17)
+                        +""+ inputLine.charAt(18) +""+ inputLine.charAt(19);
+                int decimalZ = Integer.parseInt(wordThree, 16);
+                if(decimalZ > 32767)
+                    decimalZ -= 65536;
+                
+                double doubX= (double)decimalX/261;
+                double doubY= (double)decimalY/257;
+                double doubZ= (double)decimalZ/234;
+                System.out.println("X is: " + doubX + "\nY is: " + doubY + "\nZ is: " + doubZ);
             }
             catch (Exception e) {
                 System.err.println(e.toString());
@@ -138,10 +163,4 @@ public class GyroReader implements SerialPortEventListener
     {
         portName = name;
     }    
-    
-    public void processData(String imput)
-    {
-        //imput.
-        
-    }
 }
